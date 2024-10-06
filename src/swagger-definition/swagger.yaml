@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+    title: Split Expense Microservice
+    description: |-
+        This is backend Mircroservice for the Split Expense Application
+    version: 1.0.0
+tags:
+    - name: User
+paths:
+    /users/signup:
+        post:
+            tags:
+                - User
+            summary: API for User signup service
+            description: This api can be used to add a new user to the system.
+            operationId: addUser
+            requestBody:
+                description: Create a new pet in the store
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/userSignUpRequest'
+                required: true
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/userSignUpResponse'
+                '400':
+                    description: Invalid input
+                '422':
+                    description: Validation exception
+components:
+    schemas:
+        userSignUpRequest:
+            title: User Sign Up Request
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    description: Email of the user
+                    type: string
+                    example: user@gmail.com
+                password:
+                    description: Password of the user
+                    type: string
+                    example: Password@123
+        userSignUpResponse:
+            title: User Sign Up Response
+            type: object
+            properties:
+                message:
+                    description: message for the signup response
+                    type: string

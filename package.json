@@ -1,0 +1,43 @@
+{
+    "name": "split-expense-backend",
+    "version": "1.0.0",
+    "description": "This is a backend application for the Split Expense Application",
+    "type": "module",
+    "main": "./src/app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon ./src/app.js",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "prettier": "prettier . --check",
+        "prettier:fix": "prettier . --fix"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.25.2",
+        "@babel/eslint-parser": "^7.25.7",
+        "@babel/preset-env": "^7.25.4",
+        "@eslint/eslintrc": "^3.1.0",
+        "@eslint/js": "^8.57.0",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.30.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-sonarjs": "^2.0.2",
+        "globals": "^15.9.0",
+        "nodemon": "^3.1.7",
+        "prettier": "3.3.3"
+    },
+    "dependencies": {
+        "@fastify/autoload": "^6.0.1",
+        "@fastify/env": "^5.0.1",
+        "@fastify/swagger": "^9.1.0",
+        "@fastify/swagger-ui": "^5.0.1",
+        "dotenv": "^16.4.5",
+        "fastify": "^5.0.0",
+        "fastify-openapi-glue": "^4.7.1",
+        "fastify-plugin": "^5.0.1"
+    }
+}
