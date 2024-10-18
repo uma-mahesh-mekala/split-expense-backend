@@ -15,11 +15,11 @@ paths:
             description: This api can be used to add a new user to the system.
             operationId: addUser
             requestBody:
-                description: Create a new pet in the store
+                description: Adds new user to the system
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/userSignUpRequest'
+                            $ref: '#/components/schemas/userSignUpLoginRequest'
                 required: true
             responses:
                 '200':
@@ -32,10 +32,35 @@ paths:
                     description: Invalid input
                 '422':
                     description: Validation exception
+    /users/login:
+        post:
+            tags:
+                - User
+            summary: API for User login service
+            description: This api can be used to add a new user to the system.
+            operationId: loginUser
+            requestBody:
+                description: Checks whether particular user exists in the system or not
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/userSignUpLoginRequest'
+                required: true
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/userLoginResponse'
+                '400':
+                    description: Invalid input
+                '422':
+                    description: Validation exception
 components:
     schemas:
-        userSignUpRequest:
-            title: User Sign Up Request
+        userSignUpLoginRequest:
+            title: User Sign Up/ login Request
             type: object
             required:
                 - email
@@ -54,5 +79,21 @@ components:
             type: object
             properties:
                 message:
-                    description: message for the signup response
+                    description: message for the signup/login response
                     type: string
+        userLoginResponse:
+            title: User Sign Up Response
+            type: object
+            properties:
+                message:
+                    description: message for the signup/login response
+                    type: string
+                accessToken:
+                    description: access token for authorization
+                    type: string
+                refreshToken:
+                    description: refreshToken
+                    type: string
+                expiresIn:
+                    description: expiry time for the access token in seconds from the time of generation
+                    type: integer

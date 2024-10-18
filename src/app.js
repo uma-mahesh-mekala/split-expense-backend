@@ -4,6 +4,8 @@ import fastifyAutoload from '@fastify/autoload';
 import fastifyOpenapiGlue from 'fastify-openapi-glue';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import fastifyJwt from '@fastify/jwt';
+import 'dotenv/config';
 
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -35,6 +37,9 @@ const buildServer = async () => {
         })
         .register(fastifyAutoload, {
             dir: join(__dirname, 'plugins'),
+        })
+        .register(fastifyJwt, {
+            secret: process.env.SECRET,
         })
         .register(fastifySwagger, {
             mode: 'static',
