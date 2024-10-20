@@ -10,6 +10,7 @@ import 'dotenv/config';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import serviceHandlers from './swagger-definition/index.js';
+import securityHandlers from './swagger-definition/security.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,6 +18,7 @@ const __dirname = dirname(__filename);
 const openApiGlueOptions = {
     specification: join(__dirname, 'swagger-definition/swagger.yaml'),
     serviceHandlers,
+    securityHandlers,
 };
 
 const buildServer = async () => {

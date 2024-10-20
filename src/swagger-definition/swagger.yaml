@@ -57,7 +57,31 @@ paths:
                     description: Invalid input
                 '422':
                     description: Validation exception
+    /users/{user_id}/user:
+        get:
+            operationId: getUser
+            security:
+                - splitExpenseAuth: []
+            parameters:
+                - name: authorization
+                  in: header
+                  required: true
+                  schema:
+                      type: string
+                      minLength: 1
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/getUserResponseSchema'
+
 components:
+    securitySchemes:
+        splitExpenseAuth:
+            type: http
+            scheme: bearer
     schemas:
         userSignUpLoginRequest:
             title: User Sign Up/ login Request
@@ -97,3 +121,14 @@ components:
                 expiresIn:
                     description: expiry time for the access token in seconds from the time of generation
                     type: integer
+        getUserResponseSchema:
+            type: object
+            properties:
+                user_id:
+                    type: integer
+                    description: Unique Id of the user
+                    example: 10
+                email:
+                    type: string
+                    description: user email id
+                    example: johndoe@gmail.com
