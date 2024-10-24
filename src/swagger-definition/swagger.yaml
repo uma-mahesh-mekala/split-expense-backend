@@ -76,6 +76,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/getUserResponseSchema'
+    /users/refresh/user:
+        get:
+            summary: Api to get new access token
+            description: User can send their valid refreshToken to get a new access token
+            operationId: refreshToken
+            parameters:
+                - name: refreshToken
+                  in: header
+                  required: true
+                  schema:
+                      type: string
+                      example: abcdefghijklmnopqrstuvwxyz
+            responses:
+                '200':
+                    description: successful operation
+                    content:
+                        'application/json':
+                            schema:
+                                $ref: '#/components/schemas/refreshTokenResponse'
 
 components:
     securitySchemes:
@@ -132,3 +151,15 @@ components:
                     type: string
                     description: user email id
                     example: johndoe@gmail.com
+        refreshTokenResponse:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                    example: abcdefghijklmnopqrstuvwxyz
+                refreshToken:
+                    type: string
+                    example: abcdefghijklmnopqrstuvwxyz
+                expiresIn:
+                    type: integer
+                    example: 86400

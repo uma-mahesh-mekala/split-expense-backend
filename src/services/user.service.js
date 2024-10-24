@@ -36,7 +36,6 @@ const userSignUp = async (fastifyInstance, request) => {
         console.log(err);
         if (pgClient) pgClient.release();
     } finally {
-        console.log(pgClient);
         if (pgClient) pgClient.release();
     }
 };
@@ -74,7 +73,7 @@ const userLogin = async (fastifyInstance, request) => {
 
         const accessToken = await fastifyInstance.jwt.sign(
             { user_id },
-            { expiresIn: '5h' }
+            { expiresIn: '30s' }
         );
 
         const refreshToken = await fastifyInstance.jwt.sign(
@@ -148,4 +147,69 @@ const getUser = async (fastifyInstance, request) => {
     }
 };
 
-export { userSignUp, userLogin, getUser };
+const refreshToken = async (fastifyInstance, request) => {
+    const { refreshtoken } = request.headers;
+    let pgClient;
+    let decoded;
+    try {
+        try {
+            decoded = await fastifyInstance.jwt.verify(refreshtoken);
+        } catch (err) {
+            console.log(err);
+            return {
+                statusCode: 403,
+                body: {
+                    message: 'Invalid refreshToken',
+                },
+            };
+        }
+
+        const pool = await fastifyInstance.pgPool();
+        pgClient = await pool.connect();
+        const { user_id } = decoded;
+        const getRefreshTokenQuery = {
+            text: 'SELECT DISTINCT * from refreshTokens WHERE user_id = $1 ORDER BY token_id DESC',
+            values: [user_id],
+        };
+
+        const getRefreshTokenQueryResponse =
+            await pgClient.query(getRefreshTokenQuery);
+
+        if (
+            !(
+                getRefreshTokenQueryResponse?.rowCount > 0 &&
+                getRefreshTokenQueryResponse.rows[0].refresh_token ===
+                    refreshtoken &&
+                getRefreshTokenQueryResponse.rows[0].expires_at >= Date.now()
+            )
+        ) {
+            return {
+                statusCode: 403,
+                body: {
+                    message: 'Invalid refreshToken',
+                },
+            };
+        }
+
+        const newAccessToken = await fastifyInstance.jwt.sign(
+            { user_id },
+            { expiresIn: '30s' }
+        );
+
+        return {
+            statusCode: 200,
+            body: {
+                refreshToken: refreshtoken,
+                accessToken: newAccessToken,
+                expiresIn: 5 * 60 * 60,
+            },
+        };
+    } catch (err) {
+        console.log(err);
+        if (pgClient) pgClient.release();
+    } finally {
+        if (pgClient) pgClient.release();
+    }
+};
+
+export { userSignUp, userLogin, getUser, refreshToken };
