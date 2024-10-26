@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
     title: Split Expense Microservice
     description: |-
@@ -112,7 +112,11 @@ components:
                 email:
                     description: Email of the user
                     type: string
+                    minLength: 1
+                    maxLength: 50
                     example: user@gmail.com
+                    x-error-message:
+                        pattern: must follow a valid email pattern
                 password:
                     description: Password of the user
                     type: string

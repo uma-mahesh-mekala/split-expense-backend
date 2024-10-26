@@ -5,6 +5,8 @@ import fastifyOpenapiGlue from 'fastify-openapi-glue';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import fastifyJwt from '@fastify/jwt';
+import Ajv from 'ajv';
+import ajvErrors from 'ajv-errors';
 import 'dotenv/config';
 
 import { join, dirname } from 'path';
@@ -15,21 +17,28 @@ import securityHandlers from './swagger-definition/security.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const ajvOptions = {
+    removeAdditional: false,
+    allErrors: true,
+    strict: false,
+};
+
+const ajv = new Ajv(ajvOptions);
+
+ajvErrors(ajv);
+
 const openApiGlueOptions = {
     specification: join(__dirname, 'swagger-definition/swagger.yaml'),
     serviceHandlers,
     securityHandlers,
+    ajvOptions: ajv,
 };
 
 const buildServer = async () => {
     const fastifyInstance = fastify({
         logger: true,
         ajv: {
-            customOptions: {
-                strict: false,
-                removeAdditional: false,
-                allErrors: true,
-            },
+            customOptions: ajvOptions,
         },
     });
 

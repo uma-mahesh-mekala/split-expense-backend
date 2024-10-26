@@ -73,7 +73,7 @@ const userLogin = async (fastifyInstance, request) => {
 
         const accessToken = await fastifyInstance.jwt.sign(
             { user_id },
-            { expiresIn: '30s' }
+            { expiresIn: '1h' }
         );
 
         const refreshToken = await fastifyInstance.jwt.sign(
@@ -96,7 +96,7 @@ const userLogin = async (fastifyInstance, request) => {
             body: {
                 accessToken,
                 refreshToken,
-                expiresIn: 5 * 60 * 60,
+                expiresIn: 1 * 60 * 60,
             },
         };
     } catch (err) {
